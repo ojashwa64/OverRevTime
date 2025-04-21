@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OverRev Time </title>
+    <link rel="icon" href="Blue_modern_Design_circle_tech_modern_logo_element-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4fc3f7;
+            --bg-color: #0a0a0a;
+            --text-color: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: rgba(20, 20, 20, 0.9);
+            padding: 15px 5%;
+            display: flex;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .logo {
+            width: 40px;
+            height: 40px;
+            margin-right: 20px;
+            filter: drop-shadow(0 0 5px rgba(79, 195, 247, 0.7));
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-item {
+            position: relative;
+            padding: 10px 0;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: all 0.3s;
+            font-size: clamp(14px, 2vw, 18px);
+        }
+        
+        .nav-item:hover {
+            opacity: 1;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+        }
+        
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s;
+        }
+        
+        .nav-item:hover::after {
+            width: 100%;
+        }
+        
+        /* Days of Week Styles */
+        .days-container {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 20px 0;
+        }
+        
+        .day {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: clamp(16px, 2vw, 24px);
+            padding: 8px 20px;
+            border-radius: 30px;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            width: max-content;
+            max-width: 100%;
+        }
+        
+        .day::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(79, 195, 247, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .day:hover {
+            color: rgba(255, 255, 255, 0.7);
+            transform: translateX(10px);
+        }
+        
+        .day:hover::before {
+            left: 100%;
+        }
+        
+        .day.active {
+            color: white;
+            background: rgba(79, 195, 247, 0.2);
+            transform: translateX(10px);
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(79, 195, 247, 0.5);
+        }
+        
+        .day.active::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 5px;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            box-shadow: 0 0 5px var(--primary-color);
+        }
+        
+        /* Time Display Styles */
+        .time-display {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            z-index: 2;
+            text-align: center;
+        }
+        
+        .time {
+            color: var(--primary-color);
+            font-size: clamp(60px, 15vw, 180px);
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(79, 195, 247, 0.7);
+            letter-spacing: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .colon {
+            animation: pulse 1s infinite;
+            margin: 0 10px;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        /* Background Elements */
+        .bg-circle {
+            position: fixed;
+            width: 80vmin;
+            height: 80vmin;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(79, 195, 247, 0.1) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            animation: rotate 60s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(79, 195, 247, 0.5);
+            border-radius: 50%;
+            animation: floatParticle linear infinite;
+        }
+        
+        @keyframes floatParticle {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .days-container {
+                left: 10px;
+                top: 120px;
+                transform: none;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                width: calc(100% - 20px);
+                gap: 8px;
+            }
+            
+            .day {
+                padding: 5px 15px;
+                font-size: 14px;
+            }
+            
+            .day:hover, .day.active {
+                transform: translateY(-3px);
+            }
+            
+            .time {
+                flex-direction: column;
+                font-size: clamp(40px, 20vw, 120px);
+            }
+            
+            .colon {
+                margin: 5px 0;
+                transform: rotate(90deg);
+            }
+            
+            header {
+                padding: 10px 5%;
+                justify-content: center;
+            }
+            
+            .nav-menu {
+                gap: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .days-container {
+                top: 100px;
+            }
+            
+            .day {
+                padding: 4px 12px;
+                font-size: 12px;
+            }
+            
+            .time {
+                font-size: clamp(30px, 18vw, 80px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    <div class="bg-circle"></div>
+    
+    <header>
+        <img src="Blue_modern_Design_circle_tech_modern_logo_element-removebg-preview.png" alt="Logo" class="logo">
+        <nav class="nav-menu">
+            <div class="nav-item">Clock</div>
+            <div class="nav-item">Alarm</div>
+            <div class="nav-item">Timer</div>
+            <div class="nav-item">Stopwatch</div>
+        </nav>
+    </header>
+    
+    <div class="days-container">
+        <div class="day" id="sun">Sunday</div>
+        <div class="day" id="mon">Monday</div>
+        <div class="day" id="tue">Tuesday</div>
+        <div class="day" id="wed">Wednesday</div>
+        <div class="day" id="thu">Thursday</div>
+        <div class="day" id="fri">Friday</div>
+        <div class="day" id="sat">Saturday</div>
+    </div>
+    
+    <div class="time-display">
+        <div class="time">
+            <span id="hours">00</span>
+            <span class="colon">:</span>
+            <span id="minutes">00</span>
+        </div>
+    </div>
+
+    <script>
+        // Create particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = Math.min(30, window.innerWidth / 10);
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                const size = Math.random() * 2 + 1;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.bottom = `-10px`;
+                
+                const duration = Math.random() * 10 + 10;
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = `${Math.random() * 10}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Update clock
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const dayOfWeek = now.getDay();
+            
+            document.getElementById('hours').textContent = hours;
+            document.getElementById('minutes').textContent = minutes;
+            
+            const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+            days.forEach((day, index) => {
+                const element = document.getElementById(day);
+                element.classList.toggle('active', index === dayOfWeek);
+            });
+        }
+        
+        // Handle window resize
+        function handleResize() {
+            document.getElementById('particles').innerHTML = '';
+            createParticles();
+        }
+        
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            updateClock();
+            setInterval(updateClock, 1000);
+            window.addEventListener('resize', handleResize);
+        });
+    </script>
+</body>
+</html>
