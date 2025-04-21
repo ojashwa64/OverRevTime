@@ -179,6 +179,32 @@
             50% { opacity: 0.3; }
         }
         
+        /* Date Display Styles */
+        .date-container {
+            position: fixed;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+        }
+        
+        .current-day {
+            font-size: clamp(24px, 3vw, 36px);
+            color: var(--primary-color);
+            text-shadow: 0 0 10px rgba(79, 195, 247, 0.5);
+            font-weight: bold;
+        }
+        
+        .current-date {
+            font-size: clamp(18px, 2vw, 24px);
+            color: rgba(255, 255, 255, 0.8);
+            opacity: 0.8;
+        }
+        
         /* Background Elements */
         .bg-circle {
             position: fixed;
@@ -272,6 +298,13 @@
             .nav-menu {
                 gap: 10px;
             }
+            
+            .date-container {
+                right: 20px;
+                top: 180px;
+                transform: none;
+                align-items: flex-end;
+            }
         }
         
         @media (max-width: 480px) {
@@ -286,6 +319,11 @@
             
             .time {
                 font-size: clamp(30px, 18vw, 80px);
+            }
+            
+            .date-container {
+                top: 160px;
+                right: 15px;
             }
         }
     </style>
@@ -321,6 +359,11 @@
             <span id="minutes">00</span>
         </div>
     </div>
+    
+    <div class="date-container">
+        <div class="current-day" id="current-day">Sunday</div>
+        <div class="current-date" id="current-date">January 1, 2023</div>
+    </div>
 
     <script>
         // Create particles
@@ -347,7 +390,7 @@
             }
         }
         
-        // Update clock
+        // Update clock and date
         function updateClock() {
             const now = new Date();
             const hours = now.getHours().toString().padStart(2, '0');
@@ -362,6 +405,14 @@
                 const element = document.getElementById(day);
                 element.classList.toggle('active', index === dayOfWeek);
             });
+            
+            // Update day and date display
+            const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            
+            document.getElementById('current-day').textContent = dayNames[dayOfWeek];
+            document.getElementById('current-date').textContent = 
+                `${monthNames[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
         }
         
         // Handle window resize
