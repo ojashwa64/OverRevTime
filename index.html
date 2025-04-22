@@ -366,10 +366,56 @@
     </div>
 
     <script>
+        // Voice synthesis setup
+        const voiceSettings = {
+            voice: null,
+            rate: 1.0,
+            pitch: 1.0,
+            volume: 0.8
+        };
+    
+        // Initialize speech synthesis
+        function initVoice() {
+            if ('speechSynthesis' in window) {
+                // Wait for voices to be loaded
+                speechSynthesis.onvoiceschanged = function() {
+                    const voices = speechSynthesis.getVoices();
+                    // Prefer female voices if available
+                    voiceSettings.voice = voices.find(v => v.name.includes('Female')) || 
+                                         voices.find(v => v.lang.includes('en')) || 
+                                         voices[0];
+                };
+                // Trigger voices load
+                speechSynthesis.getVoices();
+            }
+        }
+    
+        // Speak the time
+        function speakTime(hours, minutes) {
+            if (!('speechSynthesis' in window)) return;
+            
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const speakHours = hours % 12 || 12; // Convert to 12-hour format
+            
+            const msg = new SpeechSynthesisUtterance();
+            msg.text = `The time is now ${speakHours} ${minutes} ${ampm}`;
+            msg.voice = voiceSettings.voice;
+            msg.rate = voiceSettings.rate;
+            msg.pitch = voiceSettings.pitch;
+            msg.volume = voiceSettings.volume;
+            
+            // Cancel any ongoing speech
+            speechSynthesis.cancel();
+            speechSynthesis.speak(msg);
+        }
+    
         // Create particles
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
             const particleCount = Math.min(30, window.innerWidth / 10);
+            
+            // Use DocumentFragment for better performance
+            const fragment = document.createDocumentFragment();
             
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
@@ -386,11 +432,15 @@
                 particle.style.animationDuration = `${duration}s`;
                 particle.style.animationDelay = `${Math.random() * 10}s`;
                 
-                particlesContainer.appendChild(particle);
+                fragment.appendChild(particle);
             }
+            
+            particlesContainer.appendChild(fragment);
         }
         
         // Update clock and date
+        let lastSpokenMinutes = null;
+        
         function updateClock() {
             const now = new Date();
             const hours = now.getHours().toString().padStart(2, '0');
@@ -413,16 +463,27 @@
             document.getElementById('current-day').textContent = dayNames[dayOfWeek];
             document.getElementById('current-date').textContent = 
                 `${monthNames[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+            
+            // Speak time when minutes change (but only if voice is available)
+            if (lastSpokenMinutes !== minutes && 'speechSynthesis' in window) {
+                speakTime(parseInt(hours), parseInt(minutes));
+                lastSpokenMinutes = minutes;
+            }
         }
         
-        // Handle window resize
+        // Handle window resize with debounce
+        let resizeTimeout;
         function handleResize() {
-            document.getElementById('particles').innerHTML = '';
-            createParticles();
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                document.getElementById('particles').innerHTML = '';
+                createParticles();
+            }, 200);
         }
         
         // Initialize
         window.addEventListener('DOMContentLoaded', () => {
+            initVoice();
             createParticles();
             updateClock();
             setInterval(updateClock, 1000);
