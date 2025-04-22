@@ -318,6 +318,11 @@
     
     <div class="alert" id="alert">Time's up!</div>
 
+    <!-- Audio element for the alarm sound -->
+    <audio id="alarm-sound" loop>
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
         // DOM Elements
         const timeDisplay = document.getElementById('time-display');
@@ -328,6 +333,7 @@
         const pauseBtn = document.getElementById('pause-btn');
         const resetBtn = document.getElementById('reset-btn');
         const alertBox = document.getElementById('alert');
+        const alarmSound = document.getElementById('alarm-sound');
         
         // Timer variables
         let timer;
@@ -335,6 +341,7 @@
         let isRunning = false;
         let isPaused = false;
         let remainingSeconds = 0;
+        let alarmInterval;
         
         // Create particles
         function createParticles() {
@@ -435,6 +442,9 @@
             isPaused = false;
             remainingSeconds = 0;
             
+            // Stop any ongoing alarm
+            stopAlarm();
+            
             updateDisplay(totalSeconds);
             
             startBtn.disabled = false;
@@ -444,6 +454,19 @@
             hoursInput.disabled = false;
             minutesInput.disabled = false;
             secondsInput.disabled = false;
+        }
+        
+        // Play alarm sound
+        function playAlarm() {
+            alarmSound.currentTime = 0;
+            alarmSound.play().catch(e => console.log("Alarm play failed:", e));
+        }
+        
+        // Stop alarm sound
+        function stopAlarm() {
+            alarmSound.pause();
+            alarmSound.currentTime = 0;
+            clearInterval(alarmInterval);
         }
         
         // Timer complete
@@ -463,11 +486,12 @@
                     clearInterval(flashInterval);
                     timeDisplay.style.visibility = 'visible';
                     alertBox.classList.remove('show');
+                    stopAlarm();
                 }
             }, 500);
             
-            // Play sound
-            playAlertSound();
+            // Play alarm sound
+            playAlarm();
             
             // Reset controls
             startBtn.disabled = false;
@@ -477,13 +501,6 @@
             hoursInput.disabled = false;
             minutesInput.disabled = false;
             secondsInput.disabled = false;
-        }
-        
-        // Play alert sound
-        function playAlertSound() {
-            const audio = new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU...'); // Short base64 encoded beep
-            audio.volume = 0.3;
-            audio.play().catch(e => console.log("Audio play failed:", e));
         }
         
         // Validate inputs
