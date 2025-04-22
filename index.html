@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OverRev Time </title>
+    <title>OverRev Time</title>
     <link rel="icon" href="Blue_modern_Design_circle_tech_modern_logo_element-removebg-preview.png">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #4fc3f7;
-            --bg-color: #0a0a0a;
-            --text-color: #ffffff;
+            --primary-color: #ff0000; /* Changed to red */
+            --bg-color: #000000; /* Black background */
+            --text-color: #ffffff; /* White text */
+            --secondary-color: #808080; /* Grey for secondary elements */
         }
         
         * {
@@ -37,13 +38,14 @@
             box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
             position: relative;
             z-index: 10;
+            border-bottom: 1px solid var(--secondary-color);
         }
         
         .logo {
             width: 40px;
             height: 40px;
             margin-right: 20px;
-            filter: drop-shadow(0 0 5px rgba(79, 195, 247, 0.7));
+            filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.7)); /* Red shadow */
         }
         
         .nav-menu {
@@ -58,6 +60,7 @@
             opacity: 0.7;
             transition: all 0.3s;
             font-size: clamp(14px, 2vw, 18px);
+            color: var(--text-color);
         }
         
         .nav-item:hover {
@@ -72,7 +75,7 @@
             left: 0;
             width: 0;
             height: 2px;
-            background: var(--primary-color);
+            background: var(--primary-color); /* Red underline */
             transition: width 0.3s;
         }
         
@@ -94,7 +97,7 @@
         }
         
         .day {
-            color: rgba(255, 255, 255, 0.3);
+            color: var(--secondary-color); /* Grey for inactive days */
             font-size: clamp(16px, 2vw, 24px);
             padding: 8px 20px;
             border-radius: 30px;
@@ -113,12 +116,12 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(79, 195, 247, 0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.2), transparent); /* Red gradient */
             transition: 0.5s;
         }
         
         .day:hover {
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--text-color); /* White on hover */
             transform: translateX(10px);
         }
         
@@ -127,11 +130,11 @@
         }
         
         .day.active {
-            color: white;
-            background: rgba(79, 195, 247, 0.2);
+            color: var(--text-color); /* White for active day */
+            background: rgba(255, 0, 0, 0.2); /* Red background */
             transform: translateX(10px);
             font-weight: bold;
-            box-shadow: 0 0 15px rgba(79, 195, 247, 0.5);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5); /* Red shadow */
         }
         
         .day.active::after {
@@ -142,7 +145,7 @@
             transform: translateY(-50%);
             width: 8px;
             height: 8px;
-            background: var(--primary-color);
+            background: var(--primary-color); /* Red dot */
             border-radius: 50%;
             box-shadow: 0 0 5px var(--primary-color);
         }
@@ -160,10 +163,10 @@
         }
         
         .time {
-            color: var(--primary-color);
+            color: var(--primary-color); /* Red time */
             font-size: clamp(60px, 15vw, 180px);
             font-weight: bold;
-            text-shadow: 0 0 10px rgba(79, 195, 247, 0.7);
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7); /* Red shadow */
             letter-spacing: 5px;
             display: flex;
             align-items: center;
@@ -172,6 +175,7 @@
         .colon {
             animation: pulse 1s infinite;
             margin: 0 10px;
+            color: var(--text-color); /* White colon */
         }
         
         @keyframes pulse {
@@ -194,14 +198,14 @@
         
         .current-day {
             font-size: clamp(24px, 3vw, 36px);
-            color: var(--primary-color);
-            text-shadow: 0 0 10px rgba(79, 195, 247, 0.5);
+            color: var(--primary-color); /* Red day name */
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5); /* Red shadow */
             font-weight: bold;
         }
         
         .current-date {
             font-size: clamp(18px, 2vw, 24px);
-            color: rgba(255, 255, 255, 0.8);
+            color: var(--secondary-color); /* Grey date */
             opacity: 0.8;
         }
         
@@ -211,7 +215,7 @@
             width: 80vmin;
             height: 80vmin;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(79, 195, 247, 0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(255, 0, 0, 0.1) 0%, transparent 70%); /* Red gradient */
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -236,7 +240,7 @@
         
         .particle {
             position: absolute;
-            background: rgba(79, 195, 247, 0.5);
+            background: rgba(255, 255, 255, 0.5); /* White particles */
             border-radius: 50%;
             animation: floatParticle linear infinite;
         }
